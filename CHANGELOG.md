@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 - Java-style enhanced `for` loop `for (Type x : xs)` as a distinct
   `enhanced_for_statement` node kind (optional variable type: a type,
   `def`, or none).
+- Optional typed or `def` loop variable on the `for`-`in` statement
+  (`for (Type x in xs)`, `for (def x in xs)`); previously only an
+  untyped variable parsed.
 
 ### Fixed
 

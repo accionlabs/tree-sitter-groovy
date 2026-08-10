@@ -240,3 +240,59 @@ for (Map.Entry<String, String> e : m) g(e)
       (method_invocation
         function: (identifier)
         arguments: (argument_list (identifier))))))
+
+==================
+For-in with typed variable
+==================
+
+for (Map m in xs) f(m)
+
+---
+
+(source_file
+  (for_in_statement
+    type: (type_identifier)
+    variable: (identifier)
+    value: (identifier)
+    body: (expression_statement
+      (method_invocation
+        function: (identifier)
+        arguments: (argument_list (identifier))))))
+
+==================
+For-in with generic typed variable
+==================
+
+for (List<String> row in rows) { g(row) }
+
+---
+
+(source_file
+  (for_in_statement
+    type: (generic_type
+      base: (type_identifier)
+      arguments: (type_arguments (type_identifier)))
+    variable: (identifier)
+    value: (identifier)
+    body: (block
+      (expression_statement
+        (method_invocation
+          function: (identifier)
+          arguments: (argument_list (identifier)))))))
+
+==================
+For-in with def variable
+==================
+
+for (def x in xs) h(x)
+
+---
+
+(source_file
+  (for_in_statement
+    variable: (identifier)
+    value: (identifier)
+    body: (expression_statement
+      (method_invocation
+        function: (identifier)
+        arguments: (argument_list (identifier))))))

@@ -836,14 +836,15 @@ module.exports = grammar({
       field('body', choice($.block, $._statement)),
     ),
 
-    // §4 — `for (x in xs)`. Untyped variable for v1. Typed
-    // (`for (Type x in xs)`) lands later. The `in` keyword here
-    // is a structural delimiter, not the membership_expression
-    // operator — context disambiguates because the for-header is
-    // not an expression position.
+    // §4 — `for (x in xs)` / `for (Type x in xs)` / `for (def x in xs)`.
+    // The loop variable may carry an optional type or `def`, mirroring the
+    // enhanced (`:`) for. The `in` keyword here is a structural delimiter,
+    // not the membership_expression operator — context disambiguates
+    // because the for-header is not an expression position.
     for_in_statement: $ => seq(
       'for',
       '(',
+      optional(choice('def', field('type', $._type))),
       field('variable', $.identifier),
       'in',
       field('value', $._expression),
