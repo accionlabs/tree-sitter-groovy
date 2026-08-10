@@ -138,6 +138,20 @@ module.exports = grammar({
     // disambiguates.
     [$.for_in_statement, $._expression],
 
+    // §4 — inside an enum body, after the constants list a bare
+    // `Identifier` could start another `enum_constant` or be the `_type`
+    // that opens a following member declaration (`Entry\n private final
+    // String x`). The token after it (`(` / `,` vs a declarator name)
+    // decides; the conflict keeps both alternatives alive until then.
+    [$.enum_constant, $._type],
+
+    // §4 — an enum constant with arguments (`NAME(x)`) overlaps a
+    // constructor member (`NAME(params)`) that a Groovy enum body may
+    // also declare: the argument `x` parses as either an `_expression`
+    // (constant argument) or a `formal_parameter` (constructor param)
+    // until the closing `)` and what follows disambiguate.
+    [$.formal_parameter, $._expression],
+
     // §5.2 — `def identifier` could either be a
     // local_variable_declaration (variable_declarator with no
     // initializer) or the start of a method_declaration
@@ -172,6 +186,7 @@ module.exports = grammar({
       $.do_while_statement,
       $.for_statement,
       $.for_in_statement,
+      $.enhanced_for_statement,
       $.return_statement,
       $.break_statement,
       $.continue_statement,
@@ -537,11 +552,23 @@ module.exports = grammar({
       '}',
     ),
 
+    // §4 — a class / trait / interface / enum body member. Besides the
+    // callable and field members, a member may itself be a nested (inner)
+    // type declaration — Groovy allows a class/interface/enum/trait/record
+    // or an `@interface` to be declared inside another type's body. These
+    // are the same rules used at the top level (§4); listing them here lets
+    // the body recurse to arbitrary nesting depth.
     _class_member: $ => choice(
       $.method_declaration,
       $.field_declaration,
       $.constructor_declaration,
       $.static_initializer,
+      $.class_declaration,
+      $.interface_declaration,
+      $.enum_declaration,
+      $.trait_declaration,
+      $.annotation_type_declaration,
+      $.record_declaration,
     ),
 
     // §4 — constructors share the method_declaration shape but have
@@ -642,13 +669,23 @@ module.exports = grammar({
     // further class members. Constants may carry constructor
     // arguments (`RED(0xff0000)`); v1 supports that via the
     // optional argument_list.
+    // §4 — like class / interface / trait, an enum may carry visibility /
+    // other modifiers (`public enum E { … }`), so `_modifier` is accepted
+    // before the `enum` keyword.
     enum_declaration: $ => seq(
       repeat($.annotation),
+      repeat($._modifier),
       'enum',
       field('name', $.identifier),
       field('body', $.enum_body),
     ),
 
+    // §4 — enum body: the constants list, optionally followed by ordinary
+    // class members (fields, constructors, methods, nested types). Java
+    // requires a `;` between the constants and the members, but Groovy
+    // treats a newline as a statement separator, so the `;` is optional
+    // here. A member section requires at least one real `_class_member` so
+    // the empty / `;`-only body stays unambiguous.
     enum_body: $ => seq(
       '{',
       optional(seq(
@@ -656,7 +693,11 @@ module.exports = grammar({
         repeat(seq(',', $.enum_constant)),
         optional(','),
       )),
-      optional(seq(';', repeat(choice($._class_member, ';')))),
+      optional(seq(
+        optional(';'),
+        $._class_member,
+        repeat(choice($._class_member, ';')),
+      )),
       '}',
     ),
 
@@ -777,6 +818,22 @@ module.exports = grammar({
       '@',
       field('name', $.qualified_name),
       optional(field('arguments', $.argument_list)),
+    ),
+
+    // §4 — Java-style enhanced for: `for (Type var : iterable)` /
+    // `for (def var : iterable)` / `for (var : iterable)`. The `:`
+    // separates the loop variable from the iterable and distinguishes
+    // this from the Groovy `for (var in iterable)` form and the C-style
+    // `for (init; cond; update)` form.
+    enhanced_for_statement: $ => seq(
+      'for',
+      '(',
+      optional(choice('def', field('type', $._type))),
+      field('variable', $.identifier),
+      ':',
+      field('value', $._expression),
+      ')',
+      field('body', choice($.block, $._statement)),
     ),
 
     // §4 — `for (x in xs)`. Untyped variable for v1. Typed
