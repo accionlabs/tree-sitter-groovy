@@ -653,10 +653,12 @@ module.exports = grammar({
       ')',
     ),
 
-    // §5.13 — formal parameter with optional type, optional
-    // varargs marker (`Type... name`), and optional default value
-    // (`name = expr`).
+    // §5.13 — formal parameter with optional modifiers (`final`), optional
+    // type, optional varargs marker (`Type... name`), and optional default
+    // value (`name = expr`). Java/Groovy allow a modifier such as `final`
+    // before the type (`void f(final String s)`).
     formal_parameter: $ => seq(
+      repeat($._modifier),
       optional(field('type', choice($._type, $.varargs_type))),
       field('name', $.identifier),
       optional(seq('=', field('default', $._expression))),

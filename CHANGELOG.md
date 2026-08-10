@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 - Optional typed or `def` loop variable on the `for`-`in` statement
   (`for (Type x in xs)`, `for (def x in xs)`); previously only an
   untyped variable parsed.
+- Modifiers (e.g. `final`) on a formal parameter
+  (`void f(final String s)`); previously a modifier before the
+  parameter type produced `ERROR` nodes.
 
 ### Fixed
 
