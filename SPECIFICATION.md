@@ -397,7 +397,7 @@ fix relative to *both* parent grammars.
 | `if` / `else` | port | |
 | `while` / `do-while` | port | |
 | `for(;;)` | port | `init` accepts a single expression (`i = 0`) or a `local_variable_declaration` (`int i = 0`, `def i = 0`, incl. multiple declarators). Apache `forInit: localVariableDeclaration \| expressionList` also allows a comma expression list (`i = 0, j = 1`) — not yet supported. |
-| `for (x in xs)` | port | |
+| `for (x in xs)` | port | optional typed / `def` loop variable (`for (Type x in xs)`, `for (def x in xs)`). |
 | `for (Type x : xs)` | **new** | Java-style enhanced for; distinct node kind `enhanced_for_statement`. Optional variable type (`Type`, `def`, or none); `:` separates the loop variable from the iterable. |
 | `switch` with `case … :` | port | |
 | `switch` with `case … -> …` | **new** | arrow form. Closes murtaza64 #36 (second half). |
