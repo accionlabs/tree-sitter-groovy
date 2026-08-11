@@ -831,6 +831,7 @@ module.exports = grammar({
     enhanced_for_statement: $ => seq(
       'for',
       '(',
+      repeat($._modifier),
       optional(choice('def', field('type', $._type))),
       field('variable', $.identifier),
       ':',
@@ -847,6 +848,7 @@ module.exports = grammar({
     for_in_statement: $ => seq(
       'for',
       '(',
+      repeat($._modifier),
       optional(choice('def', field('type', $._type))),
       field('variable', $.identifier),
       'in',

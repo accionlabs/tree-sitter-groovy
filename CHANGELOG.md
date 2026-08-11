@@ -36,6 +36,8 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
   parameter type was required.
 - Accept the diamond operator (`new HashMap<>()`); an empty
   type-argument list previously errored.
+- Accept a leading modifier (e.g. `final`) on a `for` loop variable
+  (`for (final T x : xs)`, `for (final T x in xs)`).
 
 ## [0.2.2] - 2026-06-04
 

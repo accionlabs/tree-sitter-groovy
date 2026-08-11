@@ -296,3 +296,41 @@ for (def x in xs) h(x)
       (method_invocation
         function: (identifier)
         arguments: (argument_list (identifier))))))
+
+==================
+Enhanced for with final typed variable
+==================
+
+for (final Reception r : rs) { g(r) }
+
+---
+
+(source_file
+  (enhanced_for_statement
+    type: (type_identifier)
+    variable: (identifier)
+    value: (identifier)
+    body: (block
+      (expression_statement
+        (method_invocation
+          function: (identifier)
+          arguments: (argument_list (identifier)))))))
+
+==================
+For-in with final typed variable
+==================
+
+for (final Map row in rows) { g(row) }
+
+---
+
+(source_file
+  (for_in_statement
+    type: (type_identifier)
+    variable: (identifier)
+    value: (identifier)
+    body: (block
+      (expression_statement
+        (method_invocation
+          function: (identifier)
+          arguments: (argument_list (identifier)))))))
