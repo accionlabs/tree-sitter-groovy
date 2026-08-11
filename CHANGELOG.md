@@ -12,26 +12,26 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 - Nested (inner) type declarations: a `class` / `interface` / `enum` /
   `trait` / `record` / `@interface` may now be declared inside another
   type's body, recursing to arbitrary depth. Previously an inner type
-  produced `ERROR` nodes and truncated the enclosing type.
+  produced `ERROR` nodes and truncated the enclosing type. (#1)
 - Visibility / other modifiers on an `enum` declaration
   (`public enum E { … }`), matching the modifier support already present
-  on `class` / `interface` / `trait`.
+  on `class` / `interface` / `trait`. (#1)
 - Java-style enhanced `for` loop `for (Type x : xs)` as a distinct
   `enhanced_for_statement` node kind (optional variable type: a type,
-  `def`, or none).
+  `def`, or none). (#1)
 - Optional typed or `def` loop variable on the `for`-`in` statement
   (`for (Type x in xs)`, `for (def x in xs)`); previously only an
-  untyped variable parsed.
+  untyped variable parsed. (#2)
 - Modifiers (e.g. `final`) on a formal parameter
   (`void f(final String s)`); previously a modifier before the
-  parameter type produced `ERROR` nodes.
+  parameter type produced `ERROR` nodes. (#2)
 
 ### Fixed
 
 - Accept ordinary members (fields, constructors, methods, nested types)
   after an `enum`'s constants list without requiring a `;` separator:
   Groovy treats a newline as a statement separator, so
-  `enum E { A, B\n String x }` no longer errors.
+  `enum E { A, B\n String x }` no longer errors. (#1)
 
 ## [0.2.2] - 2026-06-04
 
