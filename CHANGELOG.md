@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
   after an `enum`'s constants list without requiring a `;` separator:
   Groovy treats a newline as a statement separator, so
   `enum E { A, B\n String x }` no longer errors.
+- Accept an untyped `catch` parameter (`catch (e)`); previously the
+  parameter type was required.
 
 ## [0.2.2] - 2026-06-04
 

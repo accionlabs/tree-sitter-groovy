@@ -401,7 +401,7 @@ fix relative to *both* parent grammars.
 | `for (Type x : xs)` | **new** | Java-style enhanced for; distinct node kind `enhanced_for_statement`. Optional variable type (`Type`, `def`, or none); `:` separates the loop variable from the iterable. |
 | `switch` with `case … :` | port | |
 | `switch` with `case … -> …` | **new** | arrow form. Closes murtaza64 #36 (second half). |
-| `try` / `catch` / `finally` | port | |
+| `try` / `catch` / `finally` | port | the catch parameter type is optional (`catch (e)`) |
 | Multi-catch | **new** | `catch (Foo \| Bar e)`. Closes murtaza64 #39. |
 | Try-with-resources | **new** | `try (Foo f = …) { … }`. |
 | `return`, `break`, `continue`, `yield` | port | break/continue accept an optional label. |

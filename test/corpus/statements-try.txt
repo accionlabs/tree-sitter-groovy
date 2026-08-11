@@ -242,3 +242,27 @@ try (Foo f = open()) { use(f) } catch (E e) { handle(e) }
           (method_invocation
             function: (identifier)
             arguments: (argument_list (identifier))))))))
+
+==================
+Untyped catch parameter
+==================
+
+try { risky() } catch (e) { handle(e) }
+
+---
+
+(source_file
+  (try_statement
+    body: (block
+      (expression_statement
+        (method_invocation
+          function: (identifier)
+          arguments: (argument_list))))
+    (catch_clause
+      parameter: (catch_formal_parameter
+        name: (identifier))
+      body: (block
+        (expression_statement
+          (method_invocation
+            function: (identifier)
+            arguments: (argument_list (identifier))))))))
