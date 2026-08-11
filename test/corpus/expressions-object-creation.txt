@@ -92,3 +92,21 @@ print(new Foo())
         (object_creation_expression
           type: (type_identifier)
           arguments: (argument_list))))))
+
+==================
+Diamond operator in object creation
+==================
+
+def m = new HashMap<>()
+
+---
+
+(source_file
+  (local_variable_declaration
+    (variable_declarator
+      name: (identifier)
+      value: (object_creation_expression
+        type: (generic_type
+          base: (type_identifier)
+          arguments: (type_arguments))
+        arguments: (argument_list)))))

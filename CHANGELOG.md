@@ -34,6 +34,8 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
   `enum E { A, B\n String x }` no longer errors.
 - Accept an untyped `catch` parameter (`catch (e)`); previously the
   parameter type was required.
+- Accept the diamond operator (`new HashMap<>()`); an empty
+  type-argument list previously errored.
 
 ## [0.2.2] - 2026-06-04
 

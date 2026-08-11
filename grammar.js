@@ -1090,10 +1090,15 @@ module.exports = grammar({
       field('arguments', $.type_arguments),
     )),
 
+    // §4 — the argument list is optional so the diamond operator
+    // (`new HashMap<>()`) parses; when present it is one-or-more
+    // type arguments.
     type_arguments: $ => seq(
       token.immediate('<'),
-      $._type_argument,
-      repeat(seq(',', $._type_argument)),
+      optional(seq(
+        $._type_argument,
+        repeat(seq(',', $._type_argument)),
+      )),
       '>',
     ),
 
