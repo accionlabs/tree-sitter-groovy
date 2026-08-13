@@ -389,7 +389,7 @@ fix relative to *both* parent grammars.
 | `enum` declaration | **new** | optional visibility / other modifiers (`public enum E`); constants list followed by class members. Java requires a `;` between the constants and the members, but Groovy accepts a newline separator, so the `;` is optional. Arrow switch is the typical use site (#36). |
 | `record` declaration | **new** | `record Name(Type a, Type b) { … }`. Groovy 4+. |
 | `sealed` / `non-sealed` / `permits` modifiers | **new** | parsed as modifier tokens that take a `permits` clause on class/interface. Groovy 4+. |
-| Method declaration | port from murtaza64 | `def` or type, optional throws clause; formal parameters accept a leading modifier (`final`) |
+| Method declaration | port from murtaza64 | `def` or type, optional throws clause; formal parameters accept a leading modifier (`final`); a leading modifier / annotation allows an implicit return type (`private foo(x) { … }`) |
 | Method definition (with body) | port from murtaza64 | |
 | Multi-assignment | **new** | `def (a, b) = expr` and `(a, b) = expr`. Closes murtaza64 #22. |
 | Local variable declaration | port from both | including `def` and explicit types |

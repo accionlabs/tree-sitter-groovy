@@ -615,15 +615,29 @@ module.exports = grammar({
     // prec(1) wins over local_variable_declaration when `(` follows
     // the name, so `def f() { … }` at script-top-level parses as a
     // method rather than a `def f` variable followed by `(…) { … }`.
-    method_declaration: $ => prec.right(2, seq(
-      repeat($.annotation),
-      repeat($._modifier),
-      optional(field('type_parameters', $.method_type_parameters)),
-      choice('def', field('return_type', $._type)),
-      field('name', $._property_name),
-      field('parameters', $.formal_parameters),
-      optional($.throws_clause),
-      optional(field('body', $.block)),
+    method_declaration: $ => prec.right(2, choice(
+      seq(
+        repeat($.annotation),
+        repeat($._modifier),
+        optional(field('type_parameters', $.method_type_parameters)),
+        choice('def', field('return_type', $._type)),
+        field('name', $._property_name),
+        field('parameters', $.formal_parameters),
+        optional($.throws_clause),
+        optional(field('body', $.block)),
+      ),
+      // Implicit-return form: a leading annotation or modifier makes this a method
+      // declaration (`private foo(x) { … }`) rather than a call, so no `def` or return
+      // type is required. The modifier / annotation is what disambiguates it from a
+      // command call with a trailing closure.
+      seq(
+        repeat($.annotation),
+        repeat1($._modifier),
+        field('name', $._property_name),
+        field('parameters', $.formal_parameters),
+        optional($.throws_clause),
+        optional(field('body', $.block)),
+      ),
     )),
 
     // §4 / §5.14 — method-level generic type parameters
