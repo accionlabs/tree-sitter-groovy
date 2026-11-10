@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
   `trait` / `record` / `@interface` may now be declared inside another
   type's body, recursing to arbitrary depth. Previously an inner type
   produced `ERROR` nodes and truncated the enclosing type.
+- Modifiers (e.g. `final`) on a formal parameter
+  (`void f(final String s)`); previously a modifier before the
+  parameter type produced `ERROR` nodes.
 
 ## [0.4.0] - 2026-11-09
 
