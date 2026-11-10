@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 
 ### Added
 
+- Nested (inner) type declarations: a `class` / `interface` / `enum` /
+  `trait` / `record` / `@interface` may now be declared inside another
+  type's body, recursing to arbitrary depth. Previously an inner type
+  produced `ERROR` nodes and truncated the enclosing type.
+- Modifiers (e.g. `final`) on a formal parameter
+  (`void f(final String s)`); previously a modifier before the
+  parameter type produced `ERROR` nodes.
 - Leading annotations and modifiers on a local variable declaration
   (`final int MAX = 100`, `@Lazy def y = compute()`), matching the prefix
   fields and methods already accept. Previously the modifier produced
@@ -18,6 +25,9 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 
 ### Fixed
 
+- Accept a method with an implicit return type when it carries a leading
+  modifier or annotation (`private foo(x) { … }`); the modifier
+  distinguishes it from a command call with a trailing closure.
 - Accept a leading modifier (e.g. `final`) on a `for` loop variable
   (`for (final T x : xs)`, `for (final T x in xs)`).
 

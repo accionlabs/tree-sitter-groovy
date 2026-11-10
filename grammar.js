@@ -557,17 +557,23 @@ module.exports = grammar({
       '}',
     ),
 
-    // A nested enum (`static enum EventType { … }` inside a domain
-    // class) is common enough in real Groovy that leaving it out
-    // silently misparses `enum` as a field_declaration's type name.
-    // Nested class/interface/trait land separately (bigger surface,
-    // own conflict set) — out of scope here.
+    // §4 — a class / trait / interface / enum body member. Besides the
+    // callable and field members, a member may itself be a nested (inner)
+    // type declaration — Groovy allows a class/interface/enum/trait/record
+    // or an `@interface` to be declared inside another type's body. These
+    // are the same rules used at the top level (§4); listing them here lets
+    // the body recurse to arbitrary nesting depth.
     _class_member: $ => choice(
       $.method_declaration,
       $.field_declaration,
       $.constructor_declaration,
       $.static_initializer,
+      $.class_declaration,
+      $.interface_declaration,
       $.enum_declaration,
+      $.trait_declaration,
+      $.annotation_type_declaration,
+      $.record_declaration,
     ),
 
     // §4 — constructors share the method_declaration shape but have
@@ -629,15 +635,29 @@ module.exports = grammar({
     // prec(1) wins over local_variable_declaration when `(` follows
     // the name, so `def f() { … }` at script-top-level parses as a
     // method rather than a `def f` variable followed by `(…) { … }`.
-    method_declaration: $ => prec.right(2, seq(
-      repeat($.annotation),
-      repeat($._modifier),
-      optional(field('type_parameters', $.method_type_parameters)),
-      choice('def', field('return_type', $._type)),
-      field('name', $._property_name),
-      field('parameters', $.formal_parameters),
-      optional($.throws_clause),
-      optional(field('body', $.block)),
+    method_declaration: $ => prec.right(2, choice(
+      seq(
+        repeat($.annotation),
+        repeat($._modifier),
+        optional(field('type_parameters', $.method_type_parameters)),
+        choice('def', field('return_type', $._type)),
+        field('name', $._property_name),
+        field('parameters', $.formal_parameters),
+        optional($.throws_clause),
+        optional(field('body', $.block)),
+      ),
+      // Implicit-return form: a leading annotation or modifier makes this a method
+      // declaration (`private foo(x) { … }`) rather than a call, so no `def` or return
+      // type is required. The modifier / annotation is what disambiguates it from a
+      // command call with a trailing closure.
+      seq(
+        repeat($.annotation),
+        repeat1($._modifier),
+        field('name', $._property_name),
+        field('parameters', $.formal_parameters),
+        optional($.throws_clause),
+        optional(field('body', $.block)),
+      ),
     )),
 
     // §4 / §5.14 — method-level generic type parameters
@@ -670,11 +690,12 @@ module.exports = grammar({
 
     // §5.13 — formal parameter with optional annotations (Spring's
     // `@PathVariable`, `@RequestBody`, JPA's `@Param`, … — ubiquitous
-    // on framework-facing methods), optional type, optional varargs
-    // marker (`Type... name`), and optional default value
-    // (`name = expr`).
+    // on framework-facing methods), optional modifiers (`final`),
+    // optional type, optional varargs marker (`Type... name`), and
+    // optional default value (`name = expr`).
     formal_parameter: $ => seq(
       repeat($.annotation),
+      repeat($._modifier),
       optional(field('type', choice($._type, $.varargs_type))),
       field('name', $.identifier),
       optional(seq('=', field('default', $._expression))),

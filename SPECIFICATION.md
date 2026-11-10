@@ -384,12 +384,12 @@ fix relative to *both* parent grammars.
 |---|---|---|
 | `package` declaration | port from amaanq | both grammars have it; trim trailing-`;` requirement to optional |
 | `import` (including static and aliased) | port from amaanq | `import static a.b.C.*`, `import a.b.C as D` |
-| `class` / `interface` / `@interface` declaration | port from murtaza64 | |
+| `class` / `interface` / `@interface` declaration | port from murtaza64 | a body member may itself be a nested (inner) type declaration (`class` / `interface` / `enum` / `trait` / `record` / `@interface`), recursing to arbitrary depth. |
 | `trait` declaration | **new** | identical body to `class`; distinct node kind `trait_declaration`. Closes the `trait` row in #247. |
 | `enum` declaration | **new** | constants list, then class members after `;`, `,;`, or nothing (the newline Groovy reads is whitespace here, #55); arrow switch is the typical use site (#36). |
 | `record` declaration | **new** | `record Name(Type a, Type b) { … }`. Groovy 4+. |
 | `sealed` / `non-sealed` / `permits` modifiers | **new** | parsed as modifier tokens that take a `permits` clause on class/interface. Groovy 4+. |
-| Method declaration | port from murtaza64 | `def` or type, optional throws clause |
+| Method declaration | port from murtaza64 | `def` or type, optional throws clause; formal parameters accept a leading modifier (`final`); a leading modifier / annotation allows an implicit return type (`private foo(x) { … }`) |
 | Method definition (with body) | port from murtaza64 | |
 | Multi-assignment | **new** | `def (a, b) = expr` and `(a, b) = expr`. Closes murtaza64 #22. |
 | Local variable declaration | port from both | including `def` and explicit types; accepts leading annotations / modifiers (`final int x = 1`, `@Lazy def y = …`) |
