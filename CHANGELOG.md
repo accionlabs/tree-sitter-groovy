@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
   (`void f(final String s)`); previously a modifier before the
   parameter type produced `ERROR` nodes.
 
+### Fixed
+
+- Accept a leading modifier (e.g. `final`) on a `for` loop variable
+  (`for (final T x : xs)`, `for (final T x in xs)`).
+
 ## [0.4.0] - 2026-11-09
 
 ### Added
