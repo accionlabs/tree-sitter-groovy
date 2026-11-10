@@ -2814,6 +2814,13 @@
           "value": "("
         },
         {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_modifier"
+          }
+        },
+        {
           "type": "CHOICE",
           "members": [
             {
