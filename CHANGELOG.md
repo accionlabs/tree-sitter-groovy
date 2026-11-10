@@ -22,12 +22,22 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
   `ERROR` nodes, and in script-style Groovy error recovery could swallow
   the declarations that follow (`final String TOP = "x"` before a
   `class`).
+- `synchronized_statement` for Java's synchronized block,
+  `synchronized (lock) { … }` (Apache `#synchronizedStmtAlt`), with
+  `lock` and `body` fields. Previously the statement was an `ERROR`.
 
 ### Fixed
 
-- Accept a method with an implicit return type when it carries a leading
-  modifier or annotation (`private foo(x) { … }`); the modifier
-  distinguishes it from a command call with a trailing closure.
+- A method declared with modifiers or annotations but no `def` or return
+  type (`private foo(x) { … }`, `@Memoized fib(n) { … }`,
+  `private <T> first(List<T> xs) { … }`) now parses as a
+  `method_declaration` with no `return_type`. Previously the name was
+  read as the return type and the real name became a zero-width
+  `MISSING` node, with no `ERROR` to flag it. Groovy requires a modifier
+  or a return type here, and an annotation counts as a modifier, so a
+  bare `foo(x) { … }` stays a call with a trailing closure. Inside a class
+  body the same text is still a `constructor_declaration`: the grammar
+  cannot compare the name with the class name.
 - Accept a leading modifier (e.g. `final`) on a `for` loop variable
   (`for (final T x : xs)`, `for (final T x in xs)`).
 

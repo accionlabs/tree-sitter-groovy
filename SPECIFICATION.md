@@ -389,13 +389,14 @@ fix relative to *both* parent grammars.
 | `enum` declaration | **new** | constants list, then class members after `;`, `,;`, or nothing (the newline Groovy reads is whitespace here, #55); arrow switch is the typical use site (#36). |
 | `record` declaration | **new** | `record Name(Type a, Type b) { … }`. Groovy 4+. |
 | `sealed` / `non-sealed` / `permits` modifiers | **new** | parsed as modifier tokens that take a `permits` clause on class/interface. Groovy 4+. |
-| Method declaration | port from murtaza64 | `def` or type, optional throws clause; formal parameters accept a leading modifier (`final`); a leading modifier / annotation allows an implicit return type (`private foo(x) { … }`) |
+| Method declaration | port from murtaza64 | `def` or type, optional throws clause; formal parameters accept a leading modifier (`final`); with no `def` or type, at least one modifier or annotation is required (`private foo(x) { … }`, `@Memoized fib(n) { … }`), as in Apache `AstBuilder` ("Modifiers or return type is required") |
 | Method definition (with body) | port from murtaza64 | |
 | Multi-assignment | **new** | `def (a, b) = expr` and `(a, b) = expr`. Closes murtaza64 #22. |
 | Local variable declaration | port from both | including `def` and explicit types; accepts leading annotations / modifiers (`final int x = 1`, `@Lazy def y = …`) |
 | Closure expression | port from murtaza64 | `{ a, b -> … }` and `{ … }`. |
 | `if` / `else` | port | |
 | `while` / `do-while` | port | |
+| `synchronized` statement | **new** | `synchronized (lock) { … }`; the body must be a block. Apache `#synchronizedStmtAlt`. |
 | `for(;;)` | port | `init` accepts a single expression (`i = 0`) or a `local_variable_declaration` (`int i = 0`, `def i = 0`, incl. multiple declarators). Apache `forInit: localVariableDeclaration \| expressionList` also allows a comma expression list (`i = 0, j = 1`) — not yet supported. |
 | `for (x in xs)` | port | also the Java-style `for (Type x : xs)`; the loop variable takes an optional leading modifier (`for (final Type x in xs)`) |
 | `switch` with `case … :` | port | |

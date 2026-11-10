@@ -287,3 +287,64 @@ private sortDeep(entry) { entry }
     body: (block
       (expression_statement
         (identifier)))))
+
+==================
+Implicit-return method with an annotation
+==================
+
+@Memoized fib(n) { n }
+
+---
+
+(source_file
+  (method_declaration
+    (annotation
+      name: (qualified_name (identifier)))
+    name: (identifier)
+    parameters: (formal_parameters
+      (formal_parameter
+        name: (identifier)))
+    body: (block
+      (expression_statement
+        (identifier)))))
+
+==================
+Implicit-return generic method with a modifier
+==================
+
+private <T> first(List<T> xs) { xs }
+
+---
+
+(source_file
+  (method_declaration
+    type_parameters: (method_type_parameters
+      (type_parameter
+        name: (type_identifier)))
+    name: (identifier)
+    parameters: (formal_parameters
+      (formal_parameter
+        type: (generic_type
+          base: (type_identifier)
+          arguments: (type_arguments (type_identifier)))
+        name: (identifier)))
+    body: (block
+      (expression_statement
+        (identifier)))))
+
+==================
+Call with a trailing closure is not a method declaration
+==================
+
+foo(x) { x }
+
+---
+
+(source_file
+  (expression_statement
+    (method_invocation
+      function: (identifier)
+      arguments: (argument_list (identifier))
+      closure: (closure
+        (expression_statement
+          (identifier))))))

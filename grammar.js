@@ -198,6 +198,7 @@ module.exports = grammar({
       $.assert_statement,
       $.yield_statement,
       $.try_statement,
+      $.synchronized_statement,
       $.class_declaration,
       $.trait_declaration,
       $.interface_declaration,
@@ -378,6 +379,16 @@ module.exports = grammar({
       field('body', $.block),
       repeat($.catch_clause),
       optional($.finally_clause),
+    ),
+
+    // §4 — `synchronized (lock) { … }` (Apache `#synchronizedStmtAlt`).
+    // The body must be a block.
+    synchronized_statement: $ => seq(
+      'synchronized',
+      '(',
+      field('lock', $._expression),
+      ')',
+      field('body', $.block),
     ),
 
     // §4 — `try (Foo f = expr; Bar b = expr) { … }`. Resources
@@ -646,13 +657,16 @@ module.exports = grammar({
         optional($.throws_clause),
         optional(field('body', $.block)),
       ),
-      // Implicit-return form: a leading annotation or modifier makes this a method
-      // declaration (`private foo(x) { … }`) rather than a call, so no `def` or return
-      // type is required. The modifier / annotation is what disambiguates it from a
-      // command call with a trailing closure.
+      // No return type: Groovy requires a modifier or a return type
+      // (AstBuilder: "Modifiers or return type is required"), and an
+      // annotation counts as a modifier. Requiring one keeps
+      // `foo(x) { … }` a call with a trailing closure.
       seq(
-        repeat($.annotation),
-        repeat1($._modifier),
+        choice(
+          seq(repeat1($.annotation), repeat($._modifier)),
+          repeat1($._modifier),
+        ),
+        optional(field('type_parameters', $.method_type_parameters)),
         field('name', $._property_name),
         field('parameters', $.formal_parameters),
         optional($.throws_clause),
