@@ -816,16 +816,20 @@ module.exports = grammar({
     // would conflict with method_invocation `Type(x)` and is
     // disallowed in v1. Multiple declarators per statement
     // (`def a = 1, b = 2`) are supported in all three forms.
-    local_variable_declaration: $ => prec.right(choice(
-      seq(
-        choice('def', 'var'),
-        $.variable_declarator,
-        repeat(seq(',', $.variable_declarator)),
-      ),
-      seq(
-        field('type', $._type),
-        $._initialized_declarator,
-        repeat(seq(',', $._initialized_declarator)),
+    local_variable_declaration: $ => prec.right(seq(
+      repeat($.annotation),
+      repeat($._modifier),
+      choice(
+        seq(
+          choice('def', 'var'),
+          $.variable_declarator,
+          repeat(seq(',', $.variable_declarator)),
+        ),
+        seq(
+          field('type', $._type),
+          $._initialized_declarator,
+          repeat(seq(',', $._initialized_declarator)),
+        ),
       ),
     )),
 
@@ -883,6 +887,7 @@ module.exports = grammar({
     for_in_statement: $ => seq(
       'for',
       '(',
+      repeat($._modifier),
       optional(choice('def', field('type', $._type))),
       field('variable', $.identifier),
       choice('in', ':'),

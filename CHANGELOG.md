@@ -16,12 +16,20 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 - Modifiers (e.g. `final`) on a formal parameter
   (`void f(final String s)`); previously a modifier before the
   parameter type produced `ERROR` nodes.
+- Leading annotations and modifiers on a local variable declaration
+  (`final int MAX = 100`, `@Lazy def y = compute()`), matching the prefix
+  fields and methods already accept. Previously the modifier produced
+  `ERROR` nodes, and in script-style Groovy error recovery could swallow
+  the declarations that follow (`final String TOP = "x"` before a
+  `class`).
 
 ### Fixed
 
 - Accept a method with an implicit return type when it carries a leading
   modifier or annotation (`private foo(x) { … }`); the modifier
   distinguishes it from a command call with a trailing closure.
+- Accept a leading modifier (e.g. `final`) on a `for` loop variable
+  (`for (final T x : xs)`, `for (final T x in xs)`).
 
 ## [0.4.0] - 2026-11-09
 

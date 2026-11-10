@@ -235,3 +235,41 @@ for (def i = 0; i < 3; i++) { a() }
         (method_invocation
           function: (identifier)
           arguments: (argument_list))))))
+
+==================
+Enhanced for with final typed variable
+==================
+
+for (final Reception r : rs) { g(r) }
+
+---
+
+(source_file
+  (for_in_statement
+    type: (type_identifier)
+    variable: (identifier)
+    value: (identifier)
+    body: (block
+      (expression_statement
+        (method_invocation
+          function: (identifier)
+          arguments: (argument_list (identifier)))))))
+
+==================
+For-in with final typed variable
+==================
+
+for (final Map row in rows) { g(row) }
+
+---
+
+(source_file
+  (for_in_statement
+    type: (type_identifier)
+    variable: (identifier)
+    value: (identifier)
+    body: (block
+      (expression_statement
+        (method_invocation
+          function: (identifier)
+          arguments: (argument_list (identifier)))))))
