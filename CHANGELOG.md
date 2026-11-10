@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 
 ## [Unreleased]
 
+### Added
+
+- Modifiers (e.g. `final`) on a formal parameter
+  (`void f(final String s)`); previously a modifier before the
+  parameter type produced `ERROR` nodes.
+
 ## [0.4.0] - 2026-11-09
 
 ### Added

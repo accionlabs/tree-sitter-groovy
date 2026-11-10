@@ -670,11 +670,12 @@ module.exports = grammar({
 
     // §5.13 — formal parameter with optional annotations (Spring's
     // `@PathVariable`, `@RequestBody`, JPA's `@Param`, … — ubiquitous
-    // on framework-facing methods), optional type, optional varargs
-    // marker (`Type... name`), and optional default value
-    // (`name = expr`).
+    // on framework-facing methods), optional modifiers (`final`),
+    // optional type, optional varargs marker (`Type... name`), and
+    // optional default value (`name = expr`).
     formal_parameter: $ => seq(
       repeat($.annotation),
+      repeat($._modifier),
       optional(field('type', choice($._type, $.varargs_type))),
       field('name', $.identifier),
       optional(seq('=', field('default', $._expression))),
