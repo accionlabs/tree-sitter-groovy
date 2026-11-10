@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 
 ## [Unreleased]
 
+### Added
+
+- Leading annotations and modifiers on a local variable declaration
+  (`final int MAX = 100`, `@Lazy def y = compute()`), matching the prefix
+  fields and methods already accept. Previously the modifier produced
+  `ERROR` nodes, and in script-style Groovy error recovery could swallow
+  the declarations that follow (`final String TOP = "x"` before a
+  `class`).
+
 ### Fixed
 
 - Accept a leading modifier (e.g. `final`) on a `for` loop variable
