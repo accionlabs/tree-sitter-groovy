@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 
 ## [Unreleased]
 
+### Fixed
+
+- Accept a method with an implicit return type when it carries a leading
+  modifier or annotation (`private foo(x) { … }`); the modifier
+  distinguishes it from a command call with a trailing closure.
+
 ## [0.4.0] - 2026-11-09
 
 ### Added
