@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
   `synchronized (lock) { … }` (Apache `#synchronizedStmtAlt`), with
   `lock` and `body` fields. Previously the statement was an `ERROR`.
 
+### Fixed
+
+- A method declared with modifiers or annotations but no `def` or return
+  type (`private foo(x) { … }`, `@Memoized fib(n) { … }`,
+  `private <T> first(List<T> xs) { … }`) now parses as a
+  `method_declaration` with no `return_type`. Previously the name was
+  read as the return type and the real name became a zero-width
+  `MISSING` node, with no `ERROR` to flag it. Groovy requires a modifier
+  or a return type here, and an annotation counts as a modifier, so a
+  bare `foo(x) { … }` stays a call with a trailing closure. Inside a class
+  body the same text is still a `constructor_declaration`: the grammar
+  cannot compare the name with the class name.
+
 ## [0.4.0] - 2026-11-09
 
 ### Added

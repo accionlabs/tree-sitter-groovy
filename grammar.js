@@ -640,15 +640,32 @@ module.exports = grammar({
     // prec(1) wins over local_variable_declaration when `(` follows
     // the name, so `def f() { … }` at script-top-level parses as a
     // method rather than a `def f` variable followed by `(…) { … }`.
-    method_declaration: $ => prec.right(2, seq(
-      repeat($.annotation),
-      repeat($._modifier),
-      optional(field('type_parameters', $.method_type_parameters)),
-      choice('def', field('return_type', $._type)),
-      field('name', $._property_name),
-      field('parameters', $.formal_parameters),
-      optional($.throws_clause),
-      optional(field('body', $.block)),
+    method_declaration: $ => prec.right(2, choice(
+      seq(
+        repeat($.annotation),
+        repeat($._modifier),
+        optional(field('type_parameters', $.method_type_parameters)),
+        choice('def', field('return_type', $._type)),
+        field('name', $._property_name),
+        field('parameters', $.formal_parameters),
+        optional($.throws_clause),
+        optional(field('body', $.block)),
+      ),
+      // No return type: Groovy requires a modifier or a return type
+      // (AstBuilder: "Modifiers or return type is required"), and an
+      // annotation counts as a modifier. Requiring one keeps
+      // `foo(x) { … }` a call with a trailing closure.
+      seq(
+        choice(
+          seq(repeat1($.annotation), repeat($._modifier)),
+          repeat1($._modifier),
+        ),
+        optional(field('type_parameters', $.method_type_parameters)),
+        field('name', $._property_name),
+        field('parameters', $.formal_parameters),
+        optional($.throws_clause),
+        optional(field('body', $.block)),
+      ),
     )),
 
     // §4 / §5.14 — method-level generic type parameters
