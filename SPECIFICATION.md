@@ -392,7 +392,7 @@ fix relative to *both* parent grammars.
 | Method declaration | port from murtaza64 | `def` or type, optional throws clause; formal parameters accept a leading modifier (`final`); a leading modifier / annotation allows an implicit return type (`private foo(x) { … }`) |
 | Method definition (with body) | port from murtaza64 | |
 | Multi-assignment | **new** | `def (a, b) = expr` and `(a, b) = expr`. Closes murtaza64 #22. |
-| Local variable declaration | port from both | including `def` and explicit types |
+| Local variable declaration | port from both | including `def` and explicit types; accepts leading annotations / modifiers (`final int x = 1`, `@Lazy def y = …`) |
 | Closure expression | port from murtaza64 | `{ a, b -> … }` and `{ … }`. |
 | `if` / `else` | port | |
 | `while` / `do-while` | port | |

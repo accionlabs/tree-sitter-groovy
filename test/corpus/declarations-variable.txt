@@ -181,3 +181,44 @@ int x = 1, y = 2
     value: (number_literal)
     name: (identifier)
     value: (number_literal)))
+
+==================
+Local variable with a final modifier
+==================
+
+def f() { final int MAX = 100 }
+
+---
+
+(source_file
+  (method_declaration
+    name: (identifier)
+    parameters: (formal_parameters)
+    body: (block
+      (local_variable_declaration
+        type: (type_identifier)
+        name: (identifier)
+        value: (number_literal)))))
+
+==================
+Local variable with an annotation
+==================
+
+def f() { @Lazy def y = compute() }
+
+---
+
+(source_file
+  (method_declaration
+    name: (identifier)
+    parameters: (formal_parameters)
+    body: (block
+      (local_variable_declaration
+        (annotation
+          name: (qualified_name
+            (identifier)))
+        (variable_declarator
+          name: (identifier)
+          value: (method_invocation
+            function: (identifier)
+            arguments: (argument_list)))))))

@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 - Modifiers (e.g. `final`) on a formal parameter
   (`void f(final String s)`); previously a modifier before the
   parameter type produced `ERROR` nodes.
+- Annotations and modifiers (e.g. `final`) on a local variable
+  declaration (`final int MAX = 100`, `@Lazy def y = compute()`),
+  matching the prefix already accepted on field and method
+  declarations. Previously a modifier before a local declaration
+  produced `ERROR` nodes, which in script-style Groovy could cascade
+  and swallow following declarations.
 
 ### Fixed
 
