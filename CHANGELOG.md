@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 
 ### Fixed
 
+- Trait declarations accept an `implements` clause (`trait T implements A, B`). (#65)
 - `final` is now accepted on method and constructor parameters (`def f(final String a)`). An untyped
   `final x` parameter no longer reports `final` as its `type`. (#64)
 - Closure parameters take what a method parameter takes: `def`

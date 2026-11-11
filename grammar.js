@@ -486,6 +486,7 @@ module.exports = grammar({
       field('name', $.identifier),
       optional(field('type_parameters', $.type_parameters)),
       optional($.extends_interfaces),
+      optional($.super_interfaces),
       optional($.permits_clause),
       field('body', $.class_body),
     ),
@@ -532,8 +533,7 @@ module.exports = grammar({
       repeat(seq(',', $._type)),
     ),
 
-    // §4 — trait / interface extend multiple interfaces (no
-    // `implements` keyword in that position).
+    // §4 — trait / interface list their super-interfaces with `extends`.
     extends_interfaces: $ => seq(
       'extends',
       $._type,
