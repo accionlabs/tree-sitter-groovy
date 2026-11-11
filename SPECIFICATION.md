@@ -389,7 +389,7 @@ fix relative to *both* parent grammars.
 | `enum` declaration | **new** | optional `implements` clause (`super_interfaces`, as on classes); constants list (each constant may carry annotations and arguments), then class members after `;`, `,;`, or nothing (the newline Groovy reads is whitespace here, #55); arrow switch is the typical use site (#36). |
 | `record` declaration | **new** | `[modifiers] record Name[<T>](Type a, Type b) [implements I] { … }`, after Apache's `classDeclaration`. Groovy 4+. Top-level and as a class member (#60). The body is optional here where Groovy requires it; records cannot `extends`. |
 | `sealed` / `non-sealed` / `permits` modifiers | **new** | parsed as modifier tokens that take a `permits` clause on class/interface. Groovy 4+. |
-| Method declaration | port from murtaza64 | `def` or type, optional throws clause |
+| Method declaration | port from murtaza64 | `def` or type, optional throws clause; outside a class body, modifiers or annotations alone also do (`private foo(x) { … }`, `@Memoized fib(n) { … }`), as in Apache's AstBuilder ("Modifiers or return type is required") |
 | Method definition (with body) | port from murtaza64 | |
 | Multi-assignment | **new** | `def (a, b) = expr` and `(a, b) = expr`. Closes murtaza64 #22. |
 | Local variable declaration | port from both | including `def` and explicit types |

@@ -119,3 +119,104 @@ public final String toString() { name }
     parameters: (formal_parameters)
     body: (block
       (expression_statement (identifier)))))
+
+==================
+Modifier-only methods at script top level
+==================
+
+final f() { }
+
+private static g(a) { a }
+
+---
+
+(source_file
+  (method_declaration
+    name: (identifier)
+    parameters: (formal_parameters)
+    body: (block))
+  (method_declaration
+    name: (identifier)
+    parameters: (formal_parameters
+      (formal_parameter
+        name: (identifier)))
+    body: (block
+      (expression_statement
+        (identifier)))))
+
+==================
+Annotation-only methods at script top level
+==================
+
+@Memoized fib(n) { n }
+
+@Memoized private cached(x) { x }
+
+---
+
+(source_file
+  (method_declaration
+    (annotation
+      name: (qualified_name
+        (identifier)))
+    name: (identifier)
+    parameters: (formal_parameters
+      (formal_parameter
+        name: (identifier)))
+    body: (block
+      (expression_statement
+        (identifier))))
+  (method_declaration
+    (annotation
+      name: (qualified_name
+        (identifier)))
+    name: (identifier)
+    parameters: (formal_parameters
+      (formal_parameter
+        name: (identifier)))
+    body: (block
+      (expression_statement
+        (identifier)))))
+
+==================
+Modifier-only generic method at script top level
+==================
+
+private <T> first(List<T> xs) { xs }
+
+---
+
+(source_file
+  (method_declaration
+    type_parameters: (method_type_parameters
+      (type_parameter
+        name: (type_identifier)))
+    name: (identifier)
+    parameters: (formal_parameters
+      (formal_parameter
+        type: (generic_type
+          base: (type_identifier)
+          arguments: (type_arguments
+            (type_identifier)))
+        name: (identifier)))
+    body: (block
+      (expression_statement
+        (identifier)))))
+
+==================
+Call with a trailing closure is not a method declaration
+==================
+
+foo(x) { x }
+
+---
+
+(source_file
+  (expression_statement
+    (method_invocation
+      function: (identifier)
+      arguments: (argument_list
+        (identifier))
+      closure: (closure
+        (expression_statement
+          (identifier))))))
