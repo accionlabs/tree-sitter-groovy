@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 
 ### Fixed
 
+- Closure parameters take what a method parameter takes: `def`
+  (`{ def b -> }`), `final`, annotations, varargs
+  (`{ String... args -> }`) and a default (`{ a = 1 -> }`,
+  `{ String prefix, int width = 8 -> }`). Each was an `ERROR` before.
+  `closure_parameter` gains a `default` field, and its `type` field
+  can hold a `varargs_type`. A closure body that opens with
+  `final def a = 1`, which this grammar does not accept as a local,
+  now recovers with a `MISSING "->"` instead of an `ERROR`.
+
+### Changed
+
+- **BREAKING:** `def` on a closure parameter after the first
+  (`{ String k, def v -> }`) used to parse with no `ERROR`, the word
+  read as the parameter's `type` (a `type_identifier` with the text
+  `def`). It is now the anonymous `def` keyword and the parameter has
+  no `type`, as a `def` local or `for` variable has.
 - Identifiers accept non-ASCII letters, as Groovy's lexer does (any
   Java letter): `void test名前を確認する() { }`, `def café = 1`.
   The token is `/[\p{XID_Start}_$][\p{XID_Continue}$]*/`; before,
