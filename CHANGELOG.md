@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 
 ### Added
 
+- Enum declarations accept an `implements` clause
+  (`enum Color implements Shaded, Comparable<Color> { … }`), as a
+  `super_interfaces` child, as on classes. Previously the clause was
+  an `ERROR`, and with a generic interface the enum's `name` became
+  the type argument: `enum Level implements Supplier<String>` was
+  named `String`. `node-types.json` adds `super_interfaces` to the
+  children of `enum_declaration`.
 - `synchronized_statement` for Java's synchronized block,
   `synchronized (lock) { … }` (Apache `#synchronizedStmtAlt`), with
   `lock` and `body` fields. Previously the statement was an `ERROR`.
