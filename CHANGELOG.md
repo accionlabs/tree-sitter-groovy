@@ -18,6 +18,16 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
   the tree shape there. A method declared with modifiers only outside a
   class body (`final f() { }`, `static f() { }`) now has `f` as its `name`
   instead of as its `return_type`. (#56)
+- A method with annotations but no modifier and no return type
+  (`@Memoized fib(n) { }`), or with type parameters after its
+  modifiers (`private <T> first(List<T> xs) { }`), outside a class
+  body now parses as a `method_declaration` with `fib` / `first` as
+  its `name`. Before, the name was read as the `return_type` and the
+  real `name` an empty `quoted_identifier` inserted by error
+  recovery, with no `ERROR` node.
+  Apache's AstBuilder accepts these, counting an annotation as a
+  modifier; with neither, `foo(x) { }` stays a call with a trailing
+  closure.
 
 ## [0.4.0] - 2026-11-09
 

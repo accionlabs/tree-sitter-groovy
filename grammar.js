@@ -631,18 +631,28 @@ module.exports = grammar({
     // prec(1) wins over local_variable_declaration when `(` follows
     // the name, so `def f() { … }` at script-top-level parses as a
     // method rather than a `def f` variable followed by `(…) { … }`.
-    // Modifiers alone (no `def`, no return type) also introduce a
-    // method outside a class body: `final f() { }`. In a class body
+    // Modifiers or annotations alone (no `def`, no return type) also
+    // introduce a method outside a class body: `final f() { }`,
+    // `@Memoized fib(n) { }`, `private <T> first(xs) { }`. Apache's
+    // AstBuilder requires one of them ("Modifiers or return type is
+    // required"), counting an annotation as a modifier, which keeps
+    // `foo(x) { }` a call with a trailing closure. In a class body
     // that shape stays a constructor_declaration.
     method_declaration: $ => prec.right(2, seq(
-      repeat($.annotation),
       choice(
         seq(
+          repeat($.annotation),
           repeat($._modifier),
           optional(field('type_parameters', $.method_type_parameters)),
           choice('def', field('return_type', $._type)),
         ),
-        repeat1($._modifier),
+        seq(
+          choice(
+            seq(repeat1($.annotation), repeat($._modifier)),
+            repeat1($._modifier),
+          ),
+          optional(field('type_parameters', $.method_type_parameters)),
+        ),
       ),
       field('name', $._property_name),
       field('parameters', $.formal_parameters),
