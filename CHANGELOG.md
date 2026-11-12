@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 
 ### Fixed
 
+- An enum member directly after a trailing comma (`A, B,` then
+  `private final int weight`), which Groovy 2.x accepts, is a member
+  again. Since v0.4.0 it parsed, with no `ERROR`, as an extra
+  `enum_constant` named after the first modifier (`private`), followed
+  by the member without that modifier. A constructor in that position
+  (`A,` then `private E(int w) { }`) is still a parse error. (#88)
 - A method with modifiers and a return type that follows a comment in a
   class body (`// note` then `public void run() { }`) is a
   `method_declaration` again. Since #61 it could parse, with no `ERROR`,
